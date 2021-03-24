@@ -11,7 +11,7 @@ import pymongo
 location = "Room 1"
 
 # COM port which RFID reader module is plugged into
-COM_PORT_NAME = 'COM4'
+COM_PORT_NAME = "COM4"
 
 # connect to reader using pyrfidgeek package
 reader = PyRFIDGeek(serial_port=COM_PORT_NAME, debug=True)
@@ -42,13 +42,13 @@ try:
         # save locations into patient database entries that are associated with the tag IDs
         for tagId in tagIds:
             patient = mycol.find_one_and_update(
-                {'tagId': tagId}, {'$push': {'locations': [timestamp, location]}}
+                {"tagId": tagId}, {"$push": {"locations": [timestamp, location]}}
             )
-            print(f'Saved location for {patient['name']} at {timestamp}')
+            print(f"Saved location for {patient['name']} at {timestamp}")
 
         # read every 2 seconds
         time.sleep(2)
 
 finally:
-    print('Bye!')
+    print("Done")
     reader.close()
