@@ -42,7 +42,7 @@ try:
         # save locations into patient database entries that are associated with the tag IDs
         for tagId in tagIds:
             patient = mycol.find_one_and_update(
-                {"tagId": tagId}, {"$push": {"locations": [timestamp, location]}}
+                {"tagId": tagId[:-1][::-1]}, {"$push": {"locations": [timestamp, location]}}
             )
             print(f"Saved location for {patient['name']} at {timestamp}")
 
