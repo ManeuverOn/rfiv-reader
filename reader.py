@@ -6,6 +6,8 @@ from __future__ import print_function
 import yaml
 from rfidgeek import PyRFIDGeek, ISO15693
 import pymongo
+import time
+import math
 
 # hardcoded location for this reader
 location = "Room 1"
@@ -28,7 +30,7 @@ mycol = mydb["patients"]
 try:
     while True:
         # time of reading
-        timestamp = time.asctime(time.localtime(time.time()))
+        timestamp = math.floor(time.time() * 1000)
 
         # keep track of tags that are read
         tagIds = []
@@ -46,8 +48,8 @@ try:
             )
             print(f"Saved location for {patient['name']} at {timestamp}")
 
-        # read every 2 seconds
-        time.sleep(2)
+        # read every half second
+        time.sleep(0.5)
 
 finally:
     print("Done")
