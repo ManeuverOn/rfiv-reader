@@ -10,7 +10,7 @@ import time
 import math
 
 # hardcoded location for this reader
-location = "Room 1"
+location = "Senior Design Lab"
 
 # COM port which RFID reader module is plugged into
 COM_PORT_NAME = "COM4"
@@ -43,10 +43,28 @@ try:
 
         # save locations into patient database entries that are associated with the tag IDs
         for tagId in tagIds:
-            patient = mycol.find_one_and_update(
-                {"tagId": tagId[:-1][::-1]}, {"$push": {"locations": [timestamp, location]}}
-            )
-            print(f"Saved location for {patient['name']} at {timestamp}")
+            # get the patient entry with this tag ID
+            patient = mycol.find_one({
+                "tagId": tagId[:-1][::-1]
+            })
+
+            # get the last location/time
+            lastLocation = patient["locations"][-1]
+
+            # if the current location is different from the last location, add it to the database
+            # or if it's been over 120 seconds regardless of the location, add it to the database
+            # otherwise, don't add it to save space in database
+            if location != lastLocation[1] or timestamp - lastLocation[0] > 120000:
+                mycol.update_one({
+                    "_id": patient["_id"]
+                }, {
+                    "$push": {
+                        "locations": [timestamp, location]
+                    }
+                })
+                print(f"Saved location for {patient['name']} at {timestamp}")
+            else:
+                print("This tag was recently read in this location.")
 
         # read every half second
         time.sleep(0.5)
