@@ -71,9 +71,12 @@ try:
                         }
                     })
                     print(
-                        f"Saved location for {patient['name']} at {timestamp}")
+                        f"Saved location for {patient['name']} at time {timestamp}")
                 else:
-                    print("This tag was recently read in this location.")
+                    print(
+                        f"This tag ({tagId}) was recently read in this location.")
+            else:
+                print(f"This tag ({tagId}) is not in the database.")
 
         # read every half second
         time.sleep(0.5)
