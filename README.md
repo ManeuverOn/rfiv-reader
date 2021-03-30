@@ -15,9 +15,9 @@ The following steps are needed to setup the Pi and run this code:
     * pip install pyyaml
     * pip install pyserial 
 5. The [reader.py](reader.py) code needs to be copied to the Pi.
-6. The hardcoded location needs to be set in reader.py, line 13. 
-7. The serial port location needs to be set in reader.py, line 16.
-8. The database connection string with username and password needs to be set in reader.py, line 26.
+6. The hardcoded location needs to be set in [reader.py, line 13](reader.py#L13). 
+7. The serial port location needs to be set in [reader.py, line 16](reader.py#L16).
+8. The database connection string with username and password needs to be set in [reader.py, line 26](reader.py#L26).
 
 ## Run the Program
 
