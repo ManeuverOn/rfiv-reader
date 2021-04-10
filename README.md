@@ -11,10 +11,10 @@ The following steps are needed to setup the Pi and run this code:
 4. The [reader.py](reader.py) code needs to be copied to the Pi.
 5. Python packages for [PyRFIDGeek](https://github.com/scriptotek/pyrfidgeek), [PyMongo](https://pymongo.readthedocs.io/en/stable/), and other dependencies need to be installed using these commands:
     * `pip3 install pymongo`
-    * `pip3 install 'pymongo\[srv\]'`
+    * `pip3 install 'pymongo[srv]'`
     * `pip3 install pyyaml`
     * `pip3 install pyserial`
-    * `Note`: The PyRFIDGeek module does not come with the functionality to activate an external antenna, so we had to manually change the source code to allow this. This was done by [forking the repository] (https://github.com/ManeuverOn/pyrfidgeek) and making the necessary changes. In order to use this updated rfidgeek module, the official module has to be uninstalled (if it was installed) using the command `pip3 uninstall rfidgeek`. Then the [code inside the rfidgeek folder](https://github.com/ManeuverOn/pyrfidgeek/tree/master/rfidgeek) must be copied to the Raspberry Pi and put in the same directory as the reader.py file.
+    * `Note`: The PyRFIDGeek module does not come with the functionality to activate an external antenna, so we had to manually change the source code to allow this. This was done by [forking the repository](https://github.com/ManeuverOn/pyrfidgeek) and making the necessary changes. In order to use this updated rfidgeek module, the official module has to be uninstalled (if it was installed) using the command `pip3 uninstall rfidgeek`. Then, the [code inside the rfidgeek folder](https://github.com/ManeuverOn/pyrfidgeek/tree/master/rfidgeek) must be copied to the Raspberry Pi and put in the same directory as the reader.py file.
 6. The hardcoded location needs to be set in [reader.py, line 13](reader.py#L13). 
 7. The serial port location needs to be set in [reader.py, line 16](reader.py#L16).
 8. The database connection string with username and password needs to be set in [reader.py, line 26](reader.py#L26).
