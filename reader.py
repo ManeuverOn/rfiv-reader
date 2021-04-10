@@ -21,6 +21,9 @@ reader = PyRFIDGeek(serial_port=COM_PORT_NAME, debug=True)
 # use RFID protocol ISO 15693 (can add more in the list)
 protocols = [ISO15693]
 
+# enable external antenna
+external_antenna = True
+
 # connect to database
 myclient = pymongo.MongoClient(
     "mongodb+srv://<USERNAME>:<PASSWORD>@cluster0.muah1.mongodb.net/rfivDB?retryWrites=true&w=majority")
@@ -29,6 +32,9 @@ mycol = mydb["patients"]
 
 # read tags
 try:
+    if external_antenna:
+        reader.enable_external_antenna()
+
     while True:
         # time of reading
         timestamp = math.floor(time.time() * 1000)
