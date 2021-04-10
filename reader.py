@@ -1,5 +1,6 @@
 # Code for reading nearby RFID tags and saving locations to database
-# Adapted from example code from PyRFIDGeek GitHub repository at:
+# Adapted from example code by Dan Michael O. Heggø
+# From PyRFIDGeek GitHub repository available at:
 # https://github.com/scriptotek/pyrfidgeek
 
 from __future__ import print_function
