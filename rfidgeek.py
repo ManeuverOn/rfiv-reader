@@ -173,7 +173,7 @@ class PyRFIDGeek(object):
     def enable_external_antenna(self):
         # Command code 0x2B: Enable external antenna
         # 0108000304 2B 0000
-        self.issue_evm_command(cmd='2B')
+        self.issue_iso15693_command(cmd='2B')
 
     def read_danish_model_tag(self, uid):
         # Command code 0x23: Read multiple blocks

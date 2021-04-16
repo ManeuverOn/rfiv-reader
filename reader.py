@@ -33,9 +33,6 @@ mycol = mydb["patients"]
 
 # read tags
 try:
-    if external_antenna:
-        reader.enable_external_antenna()
-
     while True:
         # time of reading
         timestamp = math.floor(time.time() * 1000)
@@ -46,6 +43,8 @@ try:
         # for each protocol, read the nearby tags and save their tag ID
         for protocol in protocols:
             reader.set_protocol(protocol)
+            if external_antenna:
+                reader.enable_external_antenna()
             for uid in reader.inventory():
                 tagIds.append(uid)
 
