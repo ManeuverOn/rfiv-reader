@@ -24,9 +24,9 @@ The following steps are needed to setup the Pi and run this code:
         "external_antenna": "<boolean>"
     }
     ```
-    where `<connection_string>` is the connection string to a MongoDB database, `<location>` is the location for the reader, `<port_name>` is the serial port location name of the reader when it is plugged into the Raspberry Pi, and `<boolean>` is either `true` or `false` depending on if an external antenna is being used with the reader.
+    where `<connection_string>` is the connection string to a MongoDB database, `<location>` is the physical location of the reader, `<port_name>` is the serial port location name of the reader where it is plugged into the Raspberry Pi, and `<boolean>` is either `true` or `false` depending on if an external antenna is being used with the reader.
 
-    Our connection string is in the form `mongodb+srv://<USERNAME>:<PASSWORD>@cluster0.muah1.mongodb.net/rfivDB?retryWrites=true&w=majority`, where `<USERNAME>` and `<PASSWORD>` are the username and password of a database user, respectively. The location can be any string, like "Lobby" or "Waiting Room". The port name should be in the form "/dev/ttyUSBx", where x is some digit (0, 1, 2, ...) that may vary depending on which port the reader is plugged into on the Pi.
+    Our connection string is in the form `mongodb+srv://<USERNAME>:<PASSWORD>@cluster0.muah1.mongodb.net/rfivDB?retryWrites=true&w=majority`, where `<USERNAME>` and `<PASSWORD>` are the username and password of a database user, respectively. The reader location can be any string, like "Lobby" or "Waiting Room". The port name should be in the form "/dev/ttyUSBx", where x is some digit (0, 1, 2, ...) that may vary depending on which port the reader is plugged into on the Raspberry Pi.
 
 ## Run the Program
 
