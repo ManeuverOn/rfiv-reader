@@ -9,7 +9,7 @@ The following steps are needed to setup the Pi and run this code:
 2. The [FTDI VCP Driver](https://ftdichip.com/drivers/vcp-drivers/) also needs to be installed, but this may also already come installed on the Pi. 
 3. Python3 needs to be installed (should already be on the Pi).
 4. The files in this repository need to be copied to the Pi.
-5. Python packages for [PyRFIDGeek](https://github.com/scriptotek/pyrfidgeek), [PyMongo](https://pymongo.readthedocs.io/en/stable/), and other dependencies need to be installed using these commands:
+5. Python packages for [PyRFIDGeek](https://github.com/scriptotek/pyrfidgeek), [PyMongo](https://pymongo.readthedocs.io/en/stable/), and other dependencies need to be installed using these commands in the terminal:
     * `pip3 install pymongo`
     * `pip3 install 'pymongo[srv]'`
     * `pip3 install pyyaml`
@@ -30,4 +30,4 @@ The following steps are needed to setup the Pi and run this code:
 
 ## Run the Program
 
-Run the program using `python3 reader.py`.
+Run the program using `python3 reader.py` in the terminal.

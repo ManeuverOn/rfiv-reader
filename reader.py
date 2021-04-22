@@ -28,9 +28,10 @@ try:
     external_antenna = config["external_antenna"]
     # database connection string
     connection_string = config["mongodb"]
+    print("Loaded configurations.")
 except Exception as e:
     print(e)
-    print("\nConfiguration failed. Exiting...")
+    print("\nFailed to load configurations. Exiting...")
     sys.exit(0)
 
 # connect to reader using pyrfidgeek package
@@ -39,7 +40,7 @@ try:
     print("Connected to reader.")
 except Exception as e:
     print(e)
-    print("Failed to connect to reader. Exiting...")
+    print("\nFailed to connect to reader. Exiting...")
     sys.exit(0)
 
 # connect to database
@@ -47,10 +48,10 @@ try:
     myclient = pymongo.MongoClient(connection_string)
     mydb = myclient["rfivDB"]
     mycol = mydb["patients"]
-    print("Connected to database. Ready to read.")
+    print("Connected to database.")
 except Exception as e:
     print(e)
-    print("Failed to connect to database. Exiting...")
+    print("\nFailed to connect to database. Exiting...")
     sys.exit(0)
 
 # use RFID protocol ISO 15693
@@ -64,6 +65,7 @@ def sig_int_handler(sig, frame):
 signal.signal(signal.SIGINT, sig_int_handler)
 
 # read tags
+print("Ready to read tags.")
 try:
     while True:
         # time of reading
@@ -85,8 +87,9 @@ try:
             # get the patient entry with this tag ID
             # the tag ID is stored as little-endian, so it must be reversed
             # reversing trick is adapted from John La Rooy at https://stackoverflow.com/a/5864372
+            reversed_tagId = "".join(map(str.__add__, tagId[-2::-2], tagId[-1::-2]))
             patient = mycol.find_one({
-                "tagId": "".join(map(str.__add__, tagId[-2::-2], tagId[-1::-2]))
+                "tagId": reversed_tagId
             })
 
             # if the tag is associated with a patient, save to database
@@ -112,9 +115,9 @@ try:
                         f"Saved location for {patient['name']} at time {timestamp}")
                 else:
                     print(
-                        f"This tag ({tagId}) was recently read in this location.")
+                        f"This tag ({reversed_tagId}) was recently read in this location.")
             else:
-                print(f"This tag ({tagId}) is not in the database.")
+                print(f"This tag ({reversed_tagId}) is not in the database.")
 
 finally:
     print("Error while reading. Exiting...")
