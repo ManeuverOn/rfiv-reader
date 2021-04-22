@@ -34,15 +34,6 @@ except Exception as e:
     print("\nFailed to load configurations. Exiting...")
     sys.exit(0)
 
-# connect to reader using pyrfidgeek package
-try:
-    reader = PyRFIDGeek(serial_port=COM_PORT_NAME, debug=True)
-    print("Connected to reader.")
-except Exception as e:
-    print(e)
-    print("\nFailed to connect to reader. Exiting...")
-    sys.exit(0)
-
 # connect to database
 try:
     myclient = pymongo.MongoClient(connection_string)
@@ -52,6 +43,15 @@ try:
 except Exception as e:
     print(e)
     print("\nFailed to connect to database. Exiting...")
+    sys.exit(0)
+
+# connect to reader using pyrfidgeek package
+try:
+    reader = PyRFIDGeek(serial_port=COM_PORT_NAME, debug=True)
+    print("Connected to reader.")
+except Exception as e:
+    print(e)
+    print("\nFailed to connect to reader. Exiting...")
     sys.exit(0)
 
 # use RFID protocol ISO 15693
@@ -119,6 +119,7 @@ try:
             else:
                 print(f"This tag ({reversed_tagId}) is not in the database.")
 
-finally:
-    print("Error while reading. Exiting...")
+except Exception as e:
+    print(e)
+    print("\nError while reading. Exiting...")
     reader.close()
