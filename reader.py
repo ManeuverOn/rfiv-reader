@@ -4,32 +4,64 @@
 # https://github.com/scriptotek/pyrfidgeek
 
 from __future__ import print_function
+import sys
 import yaml
 from rfidgeek import PyRFIDGeek, ISO15693
 import pymongo
 import time
 import math
+import signal
+import json
 
-# hardcoded location for this reader
-location = "Senior Design Lab"
 
-# COM port which RFID reader module is plugged into
-COM_PORT_NAME = "/dev/ttyUSB0"
+# load config file
+with open("config.json", "r") as f:
+    config = json.load(f)
+
+# load configurations
+try:
+    # location for this reader
+    location = config["reader_location"]
+    # COM port which RFID reader module is plugged into
+    COM_PORT_NAME = config["com_port_name"]
+    # enable external antenna
+    external_antenna = config["external_antenna"]
+    # database connection string
+    connection_string = config["mongodb"]
+except Exception as e:
+    print(e)
+    print("\nConfiguration failed. Exiting...")
+    sys.exit(0)
 
 # connect to reader using pyrfidgeek package
-reader = PyRFIDGeek(serial_port=COM_PORT_NAME, debug=True)
-
-# use RFID protocol ISO 15693 (can add more in the list)
-protocols = [ISO15693]
-
-# enable external antenna
-external_antenna = True
+try:
+    reader = PyRFIDGeek(serial_port=COM_PORT_NAME, debug=True)
+    print("Connected to reader.")
+except Exception as e:
+    print(e)
+    print("Failed to connect to reader. Exiting...")
+    sys.exit(0)
 
 # connect to database
-myclient = pymongo.MongoClient(
-    "mongodb+srv://<USERNAME>:<PASSWORD>@cluster0.muah1.mongodb.net/rfivDB?retryWrites=true&w=majority")
-mydb = myclient["rfivDB"]
-mycol = mydb["patients"]
+try:
+    myclient = pymongo.MongoClient(connection_string)
+    mydb = myclient["rfivDB"]
+    mycol = mydb["patients"]
+    print("Connected to database. Ready to read.")
+except Exception as e:
+    print(e)
+    print("Failed to connect to database. Exiting...")
+    sys.exit(0)
+
+# use RFID protocol ISO 15693
+protocols = [ISO15693]
+
+# handle quitting program
+def sig_int_handler(sig, frame):
+    print("\nExiting...")
+    reader.close()
+    sys.exit(0)
+signal.signal(signal.SIGINT, sig_int_handler)
 
 # read tags
 try:
@@ -84,9 +116,6 @@ try:
             else:
                 print(f"This tag ({tagId}) is not in the database.")
 
-        # read every half second
-        time.sleep(0.5)
-
 finally:
-    print("Done")
+    print("Error while reading. Exiting...")
     reader.close()
