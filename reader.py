@@ -20,11 +20,11 @@ with open("config.json", "r") as f:
 
 # load configurations
 try:
-    # location for this reader
+    # physical location for this reader
     location = config["reader_location"]
     # COM port which RFID reader module is plugged into
     COM_PORT_NAME = config["com_port_name"]
-    # enable external antenna
+    # whether or not to enable external antenna
     external_antenna = config["external_antenna"]
     # database connection string
     connection_string = config["mongodb"]
@@ -37,7 +37,9 @@ except Exception as e:
 # connect to database
 try:
     myclient = pymongo.MongoClient(connection_string)
+    # database called "rfivDB"
     mydb = myclient["rfivDB"]
+    # collection called "patients"
     mycol = mydb["patients"]
     print("Connected to database.")
 except Exception as e:
@@ -57,21 +59,21 @@ except Exception as e:
 # use RFID protocol ISO 15693
 protocols = [ISO15693]
 
-# handle quitting program
+# handle quitting program with control+C
 def sig_int_handler(sig, frame):
     print("\nExiting...")
     reader.close()
     sys.exit(0)
 signal.signal(signal.SIGINT, sig_int_handler)
 
-# read tags
+# start reading tags
 print("Ready to read tags.")
 try:
     while True:
         # time of reading
         timestamp = math.floor(time.time() * 1000)
 
-        # keep track of tags that are read
+        # list of tags that are read
         tagIds = []
 
         # for each protocol, read the nearby tags and save their tag ID
@@ -84,7 +86,7 @@ try:
 
         # save locations into patient database entries that are associated with the tag IDs
         for tagId in tagIds:
-            # get the patient entry with this tag ID
+            # get the patient document that has this tag ID
             # the tag ID is stored as little-endian, so it must be reversed
             # reversing trick is adapted from John La Rooy at https://stackoverflow.com/a/5864372
             reversed_tagId = "".join(map(str.__add__, tagId[-2::-2], tagId[-1::-2]))
@@ -94,15 +96,16 @@ try:
 
             # if the tag is associated with a patient, save to database
             if patient is not None:
-                # get the last location/time if it exists
+                # get the last known location/time if it exists
                 if len(patient["locations"]) == 0:
                     lastLocation = [0, ""]
                 else:
                     lastLocation = patient["locations"][-1]
 
-                # if the current location is different from the last location, add it to the database
-                # or if it's been over 120 seconds regardless of the location, add it to the database
-                # otherwise, don't add it to save space in database
+                # if the current location is different from the last location, add to the database;
+                # or if it's been over 120 seconds regardless of the location, add to the database;
+                # otherwise, don't add it.
+                # A list [timestamp, location] is pushed onto the patient's location array
                 if location != lastLocation[1] or timestamp - lastLocation[0] > 120000:
                     mycol.update_one({
                         "_id": patient["_id"]
@@ -111,15 +114,16 @@ try:
                             "locations": [timestamp, location]
                         }
                     })
-                    print(
-                        f"Saved location for {patient['name']} at time {timestamp}")
+                    print(f"Saved location for {patient['name']} at time {timestamp}")
                 else:
-                    print(
-                        f"This tag ({reversed_tagId}) was recently read in this location.")
+                    # tag was read too recently
+                    print(f"This tag ({reversed_tagId}) was recently read in this location.")
             else:
+                # tag not in database
                 print(f"This tag ({reversed_tagId}) is not in the database.")
 
 except Exception as e:
+    # error while reading
     print(e)
     print("\nError while reading. Exiting...")
     reader.close()
