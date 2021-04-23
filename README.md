@@ -1,6 +1,6 @@
 # rfiv-reader
 
-This code was designed to run on a Raspberry Pi with the [DLP USB RFID reader](https://www.dlpdesign.com/rf/dlp-rfid2-ds-v114.pdf). It connects to the patient MongoDB database and saves timestamp/location datapoints to patient documents if that patient's RFID tag is detect by the reader. 
+This code was designed to run on a Raspberry Pi with the [DLP USB RFID reader](https://www.dlpdesign.com/rf/dlp-rfid2-ds-v114.pdf). It connects to the patient MongoDB database and saves timestamp/location datapoints to patient documents if that patient's RFID tag is detect by the reader. The main program logic is located in [reader.py](reader.py).
 
 ## Setup
 
@@ -14,7 +14,7 @@ The following steps are needed to setup the Pi and run this code:
     * `pip3 install 'pymongo[srv]'`
     * `pip3 install pyyaml`
     * `pip3 install pyserial`
-    * `Note`: The PyRFIDGeek module does not come with the functionality to activate an external antenna, so we had to manually change the source code to allow this. In order to use the updated rfidgeek module, the official module has to be uninstalled (if it was installed) using the command `pip3 uninstall rfidgeek`. The updated module is already provided in this repository.
+    * `Note`: The PyRFIDGeek module does not come with the functionality to activate an external antenna, so we had to manually change the source code to allow this. In order to use the updated rfidgeek module, the official module has to be uninstalled (if it was installed) using the command `pip3 uninstall rfidgeek`. The updated module is already provided in this repository ([\_\_init\_\_.py](__init__.py) which is unchanged, [crc.py](crc.py) which is unchanged, and [rfidgeek.py](rfidgeek.py) which we have extended).
 6. A `config.json` file needs to be included in this directory. The code expects a file with the following structure:
     ```JSON
     {
