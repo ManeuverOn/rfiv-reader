@@ -1,6 +1,6 @@
 # rfiv-reader
 
-This code was designed to run on a Raspberry Pi with the [DLP USB RFID reader](https://www.dlpdesign.com/rf/dlp-rfid2-ds-v114.pdf). It connects to the patient MongoDB database and saves timestamp/location datapoints to patient documents if that patient's RFID tag is detect by the reader. The main program logic is located in [reader.py](reader.py).
+This code was designed to run on a Raspberry Pi with the [DLP USB RFID reader](https://www.dlpdesign.com/rf/dlp-rfid2-ds-v114.pdf). It connects to the patient MongoDB database and saves timestamp/location datapoints to patient documents if that patient's RFID tag is detected by the reader. The main program logic is located in [reader.py](reader.py).
 
 ## Setup
 
